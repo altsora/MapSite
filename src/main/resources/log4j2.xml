@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <properties>
+        <property name="logsFolder">logs</property>
+        <property name="errorFileName">error.log</property>
+        <property name="infoFileName">info.log</property>
+    </properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level - %msg%n"/>
+        </Console>
+
+        <File name="errorLogFile" fileName="${logsFolder}/${errorFileName}" append="false">
+            <PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss,SSS} (%F:%M:%L) [%5level]: %m%n%throwable%n"/>
+        </File>
+
+        <File name="infoLogFile" fileName="${logsFolder}/${infoFileName}" append="false">
+            <PatternLayout pattern="%d{DATE} [%-4level]: %m%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="errorLogger" level="error" additivity="false">
+            <AppenderRef ref="errorLogFile"/>
+        </Logger>
+
+        <Logger name="infoLogger" level="info" additivity="false">
+            <AppenderRef ref="infoLogFile"/>
+        </Logger>
+
+        <!-- Root Logger -->
+        <Root level="all">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="infoLogFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
