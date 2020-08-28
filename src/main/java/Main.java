@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
@@ -11,12 +12,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    public static final String ROOT_ADDRESS = "https://skillbox.ru";
-    public static Link rootLink = new Link(ROOT_ADDRESS);
-    public static final String FILE_PATH = "result/siteMap.txt";
+    private static final String ROOT_ADDRESS = "https://skillbox.ru";
+    private static final Link rootLink = new Link(ROOT_ADDRESS);
+    private static final String FILE_PATH = "result/siteMap.txt";
 
-    private final static Logger rootLogger = LogManager.getRootLogger();
-    private final static Logger errorLogger = LogManager.getLogger("errorLogger");
+    private static final Logger rootLogger = LogManager.getRootLogger();
+    private static final Logger errorLogger = LogManager.getLogger("errorLogger");
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
@@ -27,15 +28,15 @@ public class Main {
         new ForkJoinPool().invoke(new TreeTraversal(rootLink));     // Запуск рекурсивного многопоточного обхода
         service.shutdown();                                         // Остановка выдачи сообщений об обходе
         long end = System.currentTimeMillis() - start;
-        rootLogger.info("Формирование карты сайта завершено. Время работы: " + (end / 1000.) + " сек.");
+        rootLogger.info("Формирование карты сайта завершено. Время работы: {} сек.",(end / 1000.));
         writeMapInFile();
         rootLogger.info("Запись в файл завершена.");
-        rootLogger.info("Общее время работы: " + ((System.currentTimeMillis() - start) / 1000.) + " сек.");
+        rootLogger.info("Общее время работы: {} сек.", ((System.currentTimeMillis() - start) / 1000.));
     }
 
-    public static void walkOnTree(TreeSet<Link> children, int countTab, BufferedWriter bw) throws IOException {
+    public static void walkOnTree(Set<Link> children, int countTab, BufferedWriter bw) throws IOException {
         if (countTab == 1) bw.write(ROOT_ADDRESS + "\n");
-        if (children.size() == 0) return;
+        if (children.isEmpty()) return;
         for (Link child : children) {
             bw.write("\t".repeat(countTab) + child.getUrl() + "\n");
             walkOnTree(child.getChildren(), countTab + 1, bw);

@@ -14,8 +14,7 @@ import java.util.concurrent.RecursiveAction;
 
 @RequiredArgsConstructor
 public class TreeTraversal extends RecursiveAction {
-    private final static Logger errorLogger = LogManager.getLogger("errorLogger");
-
+    private static final Logger errorLogger = LogManager.getLogger("errorLogger");
     private final Link link;
 
     @Override
@@ -50,8 +49,7 @@ public class TreeTraversal extends RecursiveAction {
             String url = currentLink.attr("abs:href");
 
             if (url.length() == (link.getUrl().length() + 1)) continue; // Пропускаем дубликаты
-            if (url.contains("#"))
-                continue;                            // Пропускаем отдельные ссылки на участки текущей страницы
+            if (url.contains("#")) continue;                            // Пропускаем отдельные ссылки на участки текущей страницы
 
             Link tmp = new Link(url);
             // Избегаем повторяющихся ссылок на текущей странице
